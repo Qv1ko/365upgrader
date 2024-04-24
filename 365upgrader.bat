@@ -1,6 +1,19 @@
 @echo off
 
+echo .----.  .-. .----..-..-----..-..-.      .-.     .-..-.                           .-.           
+echo `--  ; .'.' : .--': :`-. .-': :; :      : :     : :: :                           : :           
+echo  .' ' .' '. `. `. : :  : :  :    :.-..-.: `-.   : :: :.---.  .--. .--.  .--.   .-' : .--. .--. 
+echo  _`,`.: .; :.-`, :: :  : :  : :: :: :; :' .; :  : :; :: .; `' .; :: ..'' .; ; ' .; :' '_.': ..'
+echo `.__.'`.__.'`.__.':_;  :_;  :_;:_;`.__.'`.__.'  `.__.': ._.'`._. ;:_;  `.__,_;`.__.'`.__.':_;  
+echo                                                       : :    .-. :                             
+echo                                                       :_;    `._.'                             
+echo.
+echo.
+
 setlocal enabledelayedexpansion
+
+	goto userClean
+	:ini
 
 	rem Run as administrator
 		if "%PROCESSOR_ARCHITECTURE%" equ "amd64" (
@@ -26,16 +39,6 @@ setlocal enabledelayedexpansion
 		:gotAdmin
 		pushd "%CD%"
 		cd /d "%~dp0"
-
-	echo .----.  .-. .----..-..-----..-..-.      .-.     .-..-.                           .-.           
-	echo `--  ; .'.' : .--': :`-. .-': :; :      : :     : :: :                           : :           
-	echo  .' ' .' '. `. `. : :  : :  :    :.-..-.: `-.   : :: :.---.  .--. .--.  .--.   .-' : .--. .--. 
-	echo  _`,`.: .; :.-`, :: :  : :  : :: :: :; :' .; :  : :; :: .; `' .; :: ..'' .; ; ' .; :' '_.': ..'
-	echo `.__.'`.__.'`.__.':_;  :_;  :_;:_;`.__.'`.__.'  `.__.': ._.'`._. ;:_;  `.__,_;`.__.'`.__.':_;  
-	echo                                                       : :    .-. :                             
-	echo                                                       :_;    `._.'                             
-	echo.
-	echo.
 
 	rem Upgrade Windows
 		echo [#] Checking for Windows updates...
@@ -212,39 +215,42 @@ setlocal enabledelayedexpansion
 		goto :eof
 
 		:endValorant
+		goto :systemClean
 
-	rem Delete download files
+	rem Clean temporary folder & download folder
+		:userClean
+		echo [#] Clearing temporary files and downloads from %username% user...
+		del /f /s /q "%userprofile%\Downloads\*.*" > nul
+		rd /s /q "%userprofile%\Downloads" > nul
+		md "%userprofile%\Downloads" > nul
+		echo     [+] Download folder cleaned
 
-		del /s /f /q %userprofile%\Downloads\*.*
-		rd /s /q %userprofile%\Downloads
-		md %userprofile%\Downloads > nul
+		del /s /f /q "%temp%\*.*" > nul
+		rd /s /q "%temp%" > nul
+		md "%temp%" > nul
+		echo     [+] Temporary files cleaned
 
-	rem Delete temp files
-		:clearIni
-		del /s /f /q %temp%\*.*
-		rem runas /user:Gamer "cmd /c del /s /f /q %temp%\*.*"
-		rd /s /q %temp%
-		md %temp% > nul
+		goto :ini
 
-		del /s /f /q %windir%\temp\*.* > nul
-		rd /s /q %windir%\temp > nul
-		md %windir%\temp > nul
+	rem Clean the temporary system folder and the recycle bin
+		:systemClean
+		echo [#] Clearing temporary system files and the recycle bin...
+		del /s /f /q "%windir%\temp\*.*" > nul
+		rd /s /q "%windir%\temp" > nul
+		md "%windir%\temp" > nul
+		echo     [+] Temporary files cleaned
 
-		explorer %temp%
-		explorer %windir%\temp
-
-	rem Clear bin
 		del /s /q %systemdrive%\$Recycle.bin\*.* > nul
 		rd /s /q %systemdrive%\$Recycle.bin > nul
-		echo [+] System Cleared
-
+		echo     [+] Bin cleaned
 
 	echo.
 
 	rem Defragment drives
+		:defrag
 		echo [+] Defragmenting drives
-		defrag /AllVolumes /B /H > nul
-		defrag /AllVolumes /D /H > nul
+		defrag /AllVolumes /B /H
+		defrag /AllVolumes /D /H
 
 	echo.
 
