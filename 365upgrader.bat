@@ -1,19 +1,6 @@
 @echo off
 
-echo .----.  .-. .----..-..-----..-..-.      .-.     .-..-.                           .-.           
-echo `--  ; .'.' : .--': :`-. .-': :; :      : :     : :: :                           : :           
-echo  .' ' .' '. `. `. : :  : :  :    :.-..-.: `-.   : :: :.---.  .--. .--.  .--.   .-' : .--. .--. 
-echo  _`,`.: .; :.-`, :: :  : :  : :: :: :; :' .; :  : :; :: .; `' .; :: ..'' .; ; ' .; :' '_.': ..'
-echo `.__.'`.__.'`.__.':_;  :_;  :_;:_;`.__.'`.__.'  `.__.': ._.'`._. ;:_;  `.__,_;`.__.'`.__.':_;  
-echo                                                       : :    .-. :                             
-echo                                                       :_;    `._.'                             
-echo.
-echo.
-
 setlocal enabledelayedexpansion
-
-	goto userClean
-	:ini
 
 	rem Run as administrator
 		if "%PROCESSOR_ARCHITECTURE%" equ "amd64" (
@@ -40,6 +27,16 @@ setlocal enabledelayedexpansion
 		pushd "%CD%"
 		cd /d "%~dp0"
 
+	echo .----.  .-. .----..-..-----..-..-.      .-.     .-..-.                           .-.           
+	echo `--  ; .'.' : .--': :`-. .-': :; :      : :     : :: :                           : :           
+	echo  .' ' .' '. `. `. : :  : :  :    :.-..-.: `-.   : :: :.---.  .--. .--.  .--.   .-' : .--. .--. 
+	echo  _`,`.: .; :.-`, :: :  : :  : :: :: :; :' .; :  : :; :: .; `' .; :: ..'' .; ; ' .; :' '_.': ..'
+	echo `.__.'`.__.'`.__.':_;  :_;  :_;:_;`.__.'`.__.'  `.__.': ._.'`._. ;:_;  `.__,_;`.__.'`.__.':_;  
+	echo                                                       : :    .-. :                             
+	echo                                                       :_;    `._.'                             
+	echo.
+	echo.
+
 	rem Upgrade Windows
 		echo [#] Checking for Windows updates...
 		powershell -command "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned" > nul || goto :updateError
@@ -55,7 +52,7 @@ setlocal enabledelayedexpansion
 		echo [-] Error trying to upgrade Windows
 
 		:endUpgradeWindows
-		
+
 	echo.
 
 	rem Drive finder
@@ -91,6 +88,8 @@ setlocal enabledelayedexpansion
 
 		:endGeforceExperience
 
+	echo.
+
 	rem Steam
 		for /l %%n in (0,1,%num%) do (
 			set "d=!drives[%%n]!"
@@ -110,6 +109,8 @@ setlocal enabledelayedexpansion
 		goto :eof
 
 		:endSteam
+
+	echo.
 
 	rem Battle.net
 		for /l %%n in (0,1,%num%) do (
@@ -131,6 +132,8 @@ setlocal enabledelayedexpansion
 
 		:endBattlenet
 
+	echo.
+
 	rem League of Legends
 		for /l %%n in (0,1,%num%) do (
 			set "d=!drives[%%n]!"
@@ -151,6 +154,8 @@ setlocal enabledelayedexpansion
 
 		:endLoL
 
+	echo.
+
 	rem Epic Games
 		for /l %%n in (0,1,%num%) do (
 			set "d=!drives[%%n]!"
@@ -170,6 +175,8 @@ setlocal enabledelayedexpansion
 		goto :eof
 
 		:endEpicGames
+
+	echo.
 
 	rem EA
 		for /l %%n in (0,1,%num%) do (
@@ -192,8 +199,10 @@ setlocal enabledelayedexpansion
 		:endEA
 
 	echo.
+
 	echo [?] Press any key to open Valorant...
 	pause > nul
+
 	echo.
 
 	rem Valorant
@@ -215,47 +224,78 @@ setlocal enabledelayedexpansion
 		goto :eof
 
 		:endValorant
-		goto :systemClean
 
-	rem Clean temporary folder & download folder
-		:userClean
-		echo [#] Clearing temporary files and downloads from %username% user...
-		del /f /s /q "%userprofile%\Downloads\*.*" > nul
-		rd /s /q "%userprofile%\Downloads" > nul
-		md "%userprofile%\Downloads" > nul
-		echo     [+] Download folder cleaned
+	echo.
 
-		del /s /f /q "%temp%\*.*" > nul
-		rd /s /q "%temp%" > nul
-		md "%temp%" > nul
-		echo     [+] Temporary files cleaned
+	rem Clean the system
+		set "endCleaning="
 
-		goto :ini
+		for /l %%n in (0,1,%num%) do (
+			set "d=!drives[%%n]!"
+			echo [#] Cleaning !drives[%%n]! drive...
+			if %%n equ %num% (
+				set endCleaning=true
+			)
+			call :searchClear
+		)
 
-	rem Clean the temporary system folder and the recycle bin
-		:systemClean
-		echo [#] Clearing temporary system files and the recycle bin...
-		del /s /f /q "%windir%\temp\*.*" > nul
-		rd /s /q "%windir%\temp" > nul
-		md "%windir%\temp" > nul
-		echo     [+] Temporary files cleaned
+		:searchClear
+		for /R "%d%" %%g in (temp) do (
+			if exist "%%g" (
+				del /s /f /q "%%g\*.*" > nul 2> nul
+				rd /s /q "%%g" > nul 2> nul
+				md "%%g" > nul 2> nul
+			)
+		)
+		echo     [+] Temporary files cleaned from %d% drive
 
-		del /s /q %systemdrive%\$Recycle.bin\*.* > nul
-		rd /s /q %systemdrive%\$Recycle.bin > nul
-		echo     [+] Bin cleaned
+		for /R "%d%" %%g in (Downloads) do (
+			if exist "%%g" (
+				del /s /f /q "%%g\*.*" > nul 2> nul
+				rd /s /q "%%g" > nul 2> nul
+				md "%%g" > nul 2> nul
+			)
+		)
+		echo     [+] Download files cleaned from %d% drive
+
+		rd /s /q %d%$Recycle.Bin > nul 2> nul
+		echo     [+] Bin of unit %d% cleared
+
+		if not "%endCleaning%" == "true" (
+			goto :eof
+		)
+
+	echo.
+
+	rem Optimise system boot
+		echo [#] Optimising the boot system...
+		defrag /AllVolumes /B /H > nul
+		echo     [+] Boot optimisation completed
 
 	echo.
 
 	rem Defragment drives
-		:defrag
-		echo [+] Defragmenting drives
-		defrag /AllVolumes /B /H
-		defrag /AllVolumes /D /H
+		echo [#] Defragmenting disks...
+		defrag /AllVolumes /D /H > nul
+		echo     [+] Disk degragmentation completed
 
 	echo.
 
 	echo [?] Tasks are finished, press a key to exit...
 	pause > nul
-	doskey /listsize=0
+
+	rem Delete command history
+		doskey /listsize=0
+
+	echo.
+
+	echo ,------.          ,--.  ,--.   
+	echo :  .---',--.  ,--.`--',-'  '-. 
+	echo :  `--,  \  `'  / ,--.'-.  .-' 
+	echo :  `---. /  /.  \ :  :  :  :   
+	echo `------''--'  '--'`--'  `--'
+
+	timeout /t 33 /nobreak > NUL
+	exit
 
 endlocal
