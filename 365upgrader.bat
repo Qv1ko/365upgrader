@@ -58,6 +58,7 @@ setlocal enabledelayedexpansion
 	rem Drive finder
 		set "drives[0]= "
 		set "num=0"
+		set "endLoop="
 
 		for /f "tokens=2 delims==" %%v in ('wmic logicaldisk get caption /value') do (
 			set "drive=%%v"
@@ -72,6 +73,9 @@ setlocal enabledelayedexpansion
 		for /l %%n in (0,1,%num%) do (
 			set "d=!drives[%%n]!"
 			echo [#] Searching NVIDIA GeForce Experience in the !drives[%%n]! drive...
+			if %%n equ %num% (
+				set endLoop=true
+			)
 			call :searchGeforceExperience
 		)
 
@@ -84,9 +88,12 @@ setlocal enabledelayedexpansion
 			)
 		)
 		echo [-] NVIDIA GeForce Experience was not found on %d% drive
-		goto :eof
+		if not "%endLoop%" == "true" (
+			goto :eof
+		)
 
 		:endGeforceExperience
+		set endLoop=false
 
 	echo.
 
@@ -94,6 +101,9 @@ setlocal enabledelayedexpansion
 		for /l %%n in (0,1,%num%) do (
 			set "d=!drives[%%n]!"
 			echo [#] Searching Steam in the !drives[%%n]! drive...
+			if %%n equ %num% (
+				set endLoop=true
+			)
 			call :searchSteam
 		)
 
@@ -106,9 +116,12 @@ setlocal enabledelayedexpansion
 			)
 		)
 		echo [-] Steam was not found on %d% drive
-		goto :eof
+		if not "%endLoop%" == "true" (
+			goto :eof
+		)
 
 		:endSteam
+		set endLoop=false
 
 	echo.
 
@@ -116,6 +129,9 @@ setlocal enabledelayedexpansion
 		for /l %%n in (0,1,%num%) do (
 			set "d=!drives[%%n]!"
 			echo [#] Searching Battle.net in the !drives[%%n]! drive...
+			if %%n equ %num% (
+				set endLoop=true
+			)
 			call :searchBattlenet
 		)
 
@@ -128,9 +144,12 @@ setlocal enabledelayedexpansion
 			)
 		)
 		echo [-] Battle.net was not found on %d% drive
-		goto :eof
+		if not "%endLoop%" == "true" (
+			goto :eof
+		)
 
 		:endBattlenet
+		set endLoop=false
 
 	echo.
 
@@ -138,6 +157,9 @@ setlocal enabledelayedexpansion
 		for /l %%n in (0,1,%num%) do (
 			set "d=!drives[%%n]!"
 			echo [#] Searching League of Leguends in the !drives[%%n]! drive...
+			if %%n equ %num% (
+				set endLoop=true
+			)
 			call :searchLoL
 		)
 
@@ -150,9 +172,12 @@ setlocal enabledelayedexpansion
 			)
 		)
 		echo [-] League of Leguends was not found on %d% drive
-		goto :eof
+		if not "%endLoop%" == "true" (
+			goto :eof
+		)
 
 		:endLoL
+		set endLoop=false
 
 	echo.
 
@@ -160,6 +185,9 @@ setlocal enabledelayedexpansion
 		for /l %%n in (0,1,%num%) do (
 			set "d=!drives[%%n]!"
 			echo [#] Searching Epic Games in the !drives[%%n]! drive...
+			if %%n equ %num% (
+				set endLoop=true
+			)
 			call :searchEpicGames
 		)
 
@@ -172,9 +200,12 @@ setlocal enabledelayedexpansion
 			)
 		)
 		echo [-] Epic Games was not found on %d% drive
-		goto :eof
+		if not "%endLoop%" == "true" (
+			goto :eof
+		)
 
 		:endEpicGames
+		set endLoop=false
 
 	echo.
 
@@ -182,6 +213,9 @@ setlocal enabledelayedexpansion
 		for /l %%n in (0,1,%num%) do (
 			set "d=!drives[%%n]!"
 			echo [#] Searching EA in the !drives[%%n]! drive...
+			if %%n equ %num% (
+				set endLoop=true
+			)
 			call :searchEA
 		)
 
@@ -194,9 +228,12 @@ setlocal enabledelayedexpansion
 			)
 		)
 		echo [-] EA was not found on %d% drive
-		goto :eof
+		if not "%endLoop%" == "true" (
+			goto :eof
+		)
 
 		:endEA
+		set endLoop=false
 
 	echo.
 
@@ -209,6 +246,9 @@ setlocal enabledelayedexpansion
 		for /l %%n in (0,1,%num%) do (
 			set "d=!drives[%%n]!"
 			echo [#] Searching Valorant in the !drives[%%n]! drive...
+			if %%n equ %num% (
+				set endLoop=true
+			)
 			call :searchValorant
 		)
 
@@ -221,20 +261,21 @@ setlocal enabledelayedexpansion
 			)
 		)
 		echo [-] Valorant was not found on %d% drive
-		goto :eof
+		if not "%endLoop%" == "true" (
+			goto :eof
+		)
 
 		:endValorant
+		set endLoop=false
 
 	echo.
 
 	rem Clean the system
-		set "endCleaning="
-
 		for /l %%n in (0,1,%num%) do (
 			set "d=!drives[%%n]!"
 			echo [#] Cleaning !drives[%%n]! drive...
 			if %%n equ %num% (
-				set endCleaning=true
+				set endLoop=true
 			)
 			call :searchClear
 		)
@@ -261,9 +302,10 @@ setlocal enabledelayedexpansion
 		rd /s /q %d%$Recycle.Bin > nul 2> nul
 		echo     [+] Bin of unit %d% cleared
 
-		if not "%endCleaning%" == "true" (
+		if not "%endLoop%" == "true" (
 			goto :eof
 		)
+		set endLoop=false
 
 	echo.
 
@@ -295,7 +337,7 @@ setlocal enabledelayedexpansion
 	echo :  `---. /  /.  \ :  :  :  :   
 	echo `------''--'  '--'`--'  `--'
 
-	timeout /t 33 /nobreak > NUL
+	timeout /t 3 /nobreak > nul
 	exit
 
 endlocal
