@@ -9,4 +9,4 @@ Script to update 365ITHub's gaming computers.
 
 ## Use
 1. Run the 365upgrader.bat script
-- *If the Windows update takes longer than 10 minutes, close and re-run the script.*
+- *If at any point the script freezes, press a key (if this does not fix it, close and re-run the script).*
