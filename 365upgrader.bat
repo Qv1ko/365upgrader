@@ -153,30 +153,30 @@ setlocal enabledelayedexpansion
 
 	echo.
 
-	rem League of Legends
+	rem Riot Client
 		for /l %%n in (0,1,%num%) do (
 			set "d=!drives[%%n]!"
-			echo [#] Searching League of Leguends in the !drives[%%n]! drive...
+			echo [#] Searching Riot Client in the !drives[%%n]! drive...
 			if %%n equ %num% (
 				set endLoop=true
 			)
-			call :searchLoL
+			call :searchRiotClient
 		)
 
-		:searchLoL
+		:searchRiotClient
 		for /R "%d%" %%g in (RiotClientServices.exe) do (
 			if exist "%%g" (
-				echo     [+] Starting League of Leguends
-				start "" "%%g" --launch-product=league_of_legends --launch-patchline=live
-				goto :endLoL
+				echo     [+] Starting Riot Client
+				start "" "%%g"
+				goto :endRiotClient
 			)
 		)
-		echo [-] League of Leguends was not found on %d% drive
+		echo [-] Riot Client was not found on %d% drive
 		if not "%endLoop%" == "true" (
 			goto :eof
 		)
 
-		:endLoL
+		:endRiotClient
 		set endLoop=false
 
 	echo.
@@ -233,39 +233,6 @@ setlocal enabledelayedexpansion
 		)
 
 		:endEA
-		set endLoop=false
-
-	echo.
-
-	echo [?] Press any key to open Valorant...
-	pause > nul
-
-	echo.
-
-	rem Valorant
-		for /l %%n in (0,1,%num%) do (
-			set "d=!drives[%%n]!"
-			echo [#] Searching Valorant in the !drives[%%n]! drive...
-			if %%n equ %num% (
-				set endLoop=true
-			)
-			call :searchValorant
-		)
-
-		:searchValorant
-		for /R "%d%" %%g in (RiotClientServices.exe) do (
-			if exist "%%g" (
-				echo     [+] Starting Valorant
-				start "" "%%g" --launch-product=valorant --launch-patchline=live
-				goto :endValorant
-			)
-		)
-		echo [-] Valorant was not found on %d% drive
-		if not "%endLoop%" == "true" (
-			goto :eof
-		)
-
-		:endValorant
 		set endLoop=false
 
 	echo.
