@@ -10,3 +10,14 @@ Script to update 365ITHub's gaming computers.
 ## Use
 1. Run the 365upgrader.bat script
 - *If at any point the script freezes, press a key (if this does not fix it, close and re-run the script).*
+
+# 365checker
+Script to check the 365ITHub peripherals.
+
+![Windows 10](https://img.shields.io/badge/Windows-10-3AADEF?style=flat-square&logo=windows&logoColor=white)
+![Windows 11](https://img.shields.io/badge/Windows-11-2C74D4?style=flat-square&logo=windows&logoColor=white)
+
+## Use
+1. Run the script 365checker.bat
+2. After checking the peripherals complete the questions
+3. Check the created .txt file
