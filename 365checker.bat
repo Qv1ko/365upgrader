@@ -8,13 +8,7 @@ echo `.__.'`.__.'`.__.':_;  :_;  :_;:_;`.__.'`.__.'  `.__.':_;:_;`.__.'`.__.':_;
 echo.
 echo.
 
-for /f "tokens=1-3 delims=/" %%a in ("%date%") do (
-    set day=%%a
-    set month=%%b
-    set year=%%c
-)
-
-set filename=check-%day%%month%%year%.txt
+set filename=check.txt
 
 rem Microphone tester
 start https://mictests.com
@@ -32,7 +26,7 @@ if exist %filename% del %filename%
 
 :MicrophoneCheck
 echo.
-set /P m=Is the microphone working properly[Y/N]?
+set /P m=Is the microphone working properly[Y/N]? 
 if /I "%m%" EQU "Y" (
     echo [+] Microphone >> %filename%
     goto HeadsetCheck
@@ -47,7 +41,7 @@ if /I "%m%" EQU "Y" (
 
 :HeadsetCheck
 echo.
-set /P h=Is the headset working properly[Y/N]?
+set /P h=Is the headset working properly[Y/N]? 
 if /I "%h%" EQU "Y" (
     echo [+] Headset >> %filename%
     goto KeyboardCheck
@@ -62,7 +56,7 @@ if /I "%h%" EQU "Y" (
 
 :KeyboardCheck
 echo.
-set /P k=Is the keyboard working properly[Y/N]?
+set /P k=Is the keyboard working properly[Y/N]? 
 if /I "%k%" EQU "Y" (
     echo [+] Keyboard >> %filename%
     goto MouseCheck
@@ -77,7 +71,7 @@ if /I "%k%" EQU "Y" (
 
 :MouseCheck
 echo.
-set /P r=Is the mouse working properly[Y/N]?
+set /P r=Is the mouse working properly[Y/N]? 
 if /I "%r%" EQU "Y" (
     echo [+] Mouse >> %filename%
 ) else if /I "%r%" EQU "N" (
