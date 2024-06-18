@@ -82,6 +82,8 @@ if /I "%r%" EQU "Y" (
     goto MouseCheck
 )
 
+start notepad %filename%
+
 rem Delete command history
 	doskey /listsize=0
 
